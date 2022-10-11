@@ -1,0 +1,7 @@
+*.pyc
+.vscode/
+*.egg-info/
+venv/
+**.ipynb
+.hypothesis/
+dist

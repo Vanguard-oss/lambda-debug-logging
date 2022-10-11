@@ -1,24 +1,30 @@
-# Title of Project
+# lambda-debug-logging
 
-Description goes here.
+lambda-debug-logging is a Python library that helps reduce logging costs without sacrificing debugging capabilities.  The library will automatically detect when your Lambda execution as failed.  If the execution failed, then all of your debug logs will get written out to CloudWatch.  If your execution succeeded, then only a small percentage of your debug logs will get written out to CloudWatch.
 
-### Repository
+## Installation
 
-http://url-to-repo.com
+```
+$ pip install lambda-debug-logging
+```
 
-### Build / Deployment Plans
+## Usage
 
-http://url-to-plan.com
+```
+from lambda_debug_logging import lambda_debug_logging
 
-### Details
+@lambda_debug_logging()
+def handler(event, context):
+    return "success!"
+```
 
-Details go here.
+## Contributing
 
-### Owner Distribution Group / Email
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Email goes here.
+- [Basic Contributor Guide](CONTRIBUTING.md)
+- [Development Guides](docs/devguide.md)
 
-### Other Information
+## License
 
-Information that was already present in the README goes here.
-
+[Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0/)
