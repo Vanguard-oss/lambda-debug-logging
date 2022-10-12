@@ -1,5 +1,3 @@
-
-
 Feature: API Gateway policies
 
   Scenario: When an API Gateway authorizer denies access then both the INFO and DEBUG logs should be logged
