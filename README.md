@@ -63,7 +63,7 @@ def handler(event, context):
 ### Out of order logs
 
 Log messages that use INFO or above will log in realtime.  Log messages that use DEBUG will be buffered in memory until later.
-When the library determines that DEBUg logs do need to be written out, they will be flushed from memory in bulk.  This means
+When the library determines that DEBUG logs do need to be written out, they will be flushed from memory in bulk.  This means
 the DEBUG logs will show up after the INFO logs.  The default JSON Formatter includes a timestamp that allows you to re-sort
 the messages to be in order, but that is an extra step you have to do.
 
