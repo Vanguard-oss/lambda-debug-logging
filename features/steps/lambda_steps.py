@@ -1,10 +1,11 @@
 import json
 import logging
 import random
+import traceback
 
 from behave import when
 
-from lambda_debug_logging import LambdaResponseType, lambda_debug_logging
+from lambda_debug_logging import failure_detection, lambda_debug_logging
 
 
 @given("the the Lambda will fail")
@@ -50,7 +51,9 @@ def step_impl(context, rate):
 
 @given('a Lambda handler exists that returns "{response_type}" responses')
 def step_impl(context, response_type):
-    @lambda_debug_logging(response_type=getattr(LambdaResponseType, response_type))
+    @lambda_debug_logging(
+        response_failure_check=getattr(failure_detection, response_type)
+    )
     def mock_handler(event, ctx):
         print("In Handler")
         print("Messages: " + str(context.messages))
@@ -86,6 +89,7 @@ def step_impl(context):
     try:
         context.resp = context.handler({}, None)
     except Exception as e:
+        traceback.print_exc()
         context.thrown = e
     print("logged: ")
     print(context.buffer.getvalue())

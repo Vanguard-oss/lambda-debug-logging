@@ -8,6 +8,13 @@ from setuptools import find_packages, setup
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
+github_docs_base_url = "https://github.com/vanguard/lambda-debug-logging/blob/master/"
+# Have Pypi use FQDN to Github, but everywhere else use relative links
+long_description = re.compile(r"\(([a-zA-Z0-9_\-/]*.md)\)").sub(
+    f"({github_docs_base_url}\\1)", long_description
+)
+
+
 setup(
     author="Vanguard",
     author_email="opensource@vanguard.com",

@@ -11,7 +11,12 @@ _BUFFER_HANDLER = None
 
 
 def register_handler(stream=None, formatter=None):
-    """Register the Logging handlers"""
+    """Register the Logging handlers
+
+    Args:
+        stream (file-like): A stream that will be written to.  This is mainly for unit testing the library
+        formatter (Formatter): The formatter to use if you don't want to use the default JSONFormatter
+    """
     global _BUFFER_HANDLER  # pylint: disable=global-statement
     log = logging.getLogger("lambda_debug_logging")
     log.debug("Registering logging handlers")
@@ -55,7 +60,11 @@ def register_handler(stream=None, formatter=None):
 
 
 def clear_buffer(sample_rate: float = 0.001):
-    """Clear the debug buffer"""
+    """Clear the debug buffer
+
+    Args:
+        sample_rate (float): The rate at which debug logs are printed out even if everything was successful
+    """
     global _BUFFER_HANDLER  # pylint: disable=global-statement
     if _BUFFER_HANDLER is None:
         raise Exception(
@@ -74,19 +83,17 @@ def clear_buffer(sample_rate: float = 0.001):
     _BUFFER_HANDLER.clear()
 
 
-class LambdaResponseType(Enum):
-    """Enumeration of Lambda response types"""
-
-    UNKNOWN = 0
-    HTTP = 1
-    APIGW_AUTHPOLICY = 2
-
-
 def lambda_debug_logging(
-    response_type: LambdaResponseType = LambdaResponseType.UNKNOWN,
+    response_failure_check=None,
     sample_rate: float = 0.001,
 ):
-    """Decorator that writes debug logs if there is a need to"""
+    """Decorator that writes debug logs if there is a need to
+
+    Args:
+        response_failure_check (func): The function that checks if the Lambda response should be considered a failure
+        sample_rate (float)          : The rate at which debug logs should be sent even during a successful execution
+
+    """
 
     # The two levels of nested functions is needed to allow a decorator
     # that has it's own arguments
@@ -101,7 +108,7 @@ def lambda_debug_logging(
                 func,
                 event,
                 context,
-                response_type=response_type,
+                response_failure_check=response_failure_check,
                 sample_rate=sample_rate,
             )
 
@@ -114,7 +121,7 @@ def _wrapper_handler(
     func,
     event,
     context,
-    response_type: LambdaResponseType = LambdaResponseType.UNKNOWN,
+    response_failure_check=None,
     sample_rate: float = 0.001,
 ):
 
@@ -127,21 +134,9 @@ def _wrapper_handler(
         raise exception
 
     try:
-        if response_type == LambdaResponseType.HTTP:
-            if resp is None:
-                log.error("No response was given")
-            else:
-                status_code = resp.get("statusCode", 200)
-                if status_code >= 400:
-                    log.error("Status Code: %s", status_code)
-        elif response_type == LambdaResponseType.APIGW_AUTHPOLICY:
-            effect = (
-                resp.get("policyDocument", {})
-                .get("Statement", [{}])[0]
-                .get("Effect", "Deny")
-            )
-            if effect == "Deny":
-                log.error("Auth was denied")
+        if response_failure_check is not None:
+            if not response_failure_check(resp):
+                log.error("Lambda executed successfully, but with a failure response")
     except Exception as exception:  # pylint: disable=broad-except
         # post-execution exceptions shouldn't fail the overall execution
         log.exception("Failed post-execution: %s", str(exception))
