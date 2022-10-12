@@ -1,7 +1,7 @@
 Feature: HTTP status codes
 
   Scenario: When an HTTP Lambda function returns a >=400 status code then both the INFO and DEBUG logs should be logged
-    Given a Lambda handler exists that returns "HTTP" responses
+    Given a Lambda handler exists that returns "http_status_code_check" responses
     And the logger "myapp" will INFO log the message "abc"
     And the logger "myapp" will DEBUG log the message "def"
     And the Lambda handler will return:
@@ -16,7 +16,7 @@ Feature: HTTP status codes
     And the logs contain "def"
 
   Scenario: When an HTTP Lambda function returns an invalid response then both the INFO and DEBUG logs should be logged
-    Given a Lambda handler exists that returns "HTTP" responses
+    Given a Lambda handler exists that returns "http_status_code_check" responses
     And the random seed is "1"
     And the logger "myapp" will INFO log the message "abc"
     And the logger "myapp" will DEBUG log the message "def"
@@ -26,7 +26,7 @@ Feature: HTTP status codes
     And the logs contain "def"
 
   Scenario: When an HTTP Lambda function returns a 200 status code then only INFO messages should be logged
-    Given a Lambda handler exists that returns "HTTP" responses
+    Given a Lambda handler exists that returns "http_status_code_check" responses
     And the random seed is "1"
     And the logger "myapp" will INFO log the message "abc"
     And the logger "myapp" will DEBUG log the message "def"
