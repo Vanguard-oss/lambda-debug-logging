@@ -11,7 +11,9 @@ $ pip install lambda-debug-logging
 ## Usage
 
 ```
-from lambda_debug_logging import lambda_debug_logging
+from lambda_debug_logging import lambda_debug_logging, register_handler
+
+register_handler()
 
 @lambda_debug_logging()
 def handler(event, context):
@@ -29,7 +31,9 @@ sends back a 500 should still be considered a failure.  The debug logs should ge
 When using a Lambda with an ALB or API Gateway, you can use the `http_status_code_check` function to check for status codes >= 400.
 
 ```
-from lambda_debug_logging import lambda_debug_logging, failure_detection
+from lambda_debug_logging import lambda_debug_logging, failure_detection, register_handler
+
+register_handler()
 
 @lambda_debug_logging(response_failure_check=failure_detection.http_status_code_check)
 def handler(event, context):
@@ -43,7 +47,9 @@ def handler(event, context):
 When using a Lambda as an API Gateway custom authorizer, you can use the `apigw_authpolicy_check` function to check for Access Denied polices.
 
 ```
-from lambda_debug_logging import lambda_debug_logging, failure_detection
+from lambda_debug_logging import lambda_debug_logging, failure_detection, register_handler
+
+register_handler()
 
 @lambda_debug_logging(response_failure_check=failure_detection.apigw_authpolicy_check)
 def handler(event, context):
