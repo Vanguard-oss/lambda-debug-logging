@@ -10,7 +10,7 @@ External contributor signs contributor license agreement, and issues a pull requ
 - Fork the repo
 - Create a branch in your forked repo
 - Merge your changes back to your master branch.
-- Open a PR to merge the master branch of your fork into behave-asl's master branch
+- Open a PR to merge the master branch of your fork into our master branch
 - Add your name to [CONTRIBUTORS.md](CONTRIBUTORS.md)
 - Done!
 

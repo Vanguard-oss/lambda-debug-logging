@@ -2,7 +2,7 @@
 
 ## Copyright
 
-Copyright 2022 The Vanguard Group, Inc.
+Copyright 2023 The Vanguard Group, Inc.
 
 ## Declared Project Licenses
 
